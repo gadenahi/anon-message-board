@@ -34,15 +34,17 @@ module.exports = function (app) {
     if (board != "general") {
       filter = {'board': board}
     }
-    
-    // console.log("GET Filter" +filter)
-    
-    Threads.find(filter, display_filter, function(err, data) {
+    // console.log("GET " +threads._id)
+        
+    Threads.findOne(filter, display_filter, function(err, data) {
+    // Threads.find(filter, display_filter, function(err, data) {      
         if (data) {
           // res.json(data)
-          // console.log({"_id": data[0]._id, "text": data[0].text, "created_on":data[0].created_on, "bumped_on":data[0].bumped_on, "replycount":data[0].replycount, "replies": data[0].replies})
-          // console.log({"_id": threads._id, "text": threads.text, "created_on":threads.created_on, "bumped_on":threads.bumped_on, "replies": threads.replies, "replycount":threads.replycount})
-          res.json({"_id": data[0]._id, "text": data[0].text, "created_on":data[0].created_on, "bumped_on":data[0].bumped_on, "replycount":data[0].replycount, "replies": data[0].replies.slice(0, 3)})
+    // console.log("GET after filter " +threads._id)
+          // res.json({"_id": data[0]._id, "text": data[0].text, "created_on":data[0].created_on, "bumped_on":data[0].bumped_on, "replycount":data[0].replycount, "replies": data[0].replies.slice(0, 3)})
+          res.json({"_id": data._id, "text": data.text, "created_on":data.created_on, "bumped_on":data.bumped_on, "replycount":data.replycount, "replies": data.replies.slice(0, 3)})
+          // console.log("GET after filter" + JSON.stringify({"_id": data._id, "text": data.text, "created_on":data.created_on, "bumped_on":data.bumped_on, "replycount":data.replycount, "replies": data.replies.slice(0, 3)}))
+
         } else {
           req.flash("error", err.errors);
         }        
@@ -68,16 +70,21 @@ module.exports = function (app) {
         ); 
         threads.delete_password = pw;        
        
+        // console.log(threads)
+        
         threads.save(function(err, thread) {
           if (err) {
             console.log(err)
-            return res.send('Cloud not save');
+            return res.send('Could not save');
           } 
           // console.log(thread)
           // res.redirect('/b/' + board)
                     res.redirect('/b/${board}')
 
         })
+        
+               
+        // console.log(threads)
       }
   })
   
